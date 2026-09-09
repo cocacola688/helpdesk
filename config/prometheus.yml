@@ -1,0 +1,26 @@
+# Prometheus 配置文件 — IT HelpDesk 系统
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'helpdesk'
+    environment: 'production'
+
+rule_files:
+  - "alerts/*.yml"
+
+scrape_configs:
+  # IT HelpDesk 主应用指标
+  - job_name: 'helpdesk-app'
+    static_configs:
+      - targets: ['helpdesk:8000']
+        labels:
+          service: 'helpdesk'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+
+  # Prometheus 自监控
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
